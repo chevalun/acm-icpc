@@ -5,20 +5,28 @@ TASK: stamps
 */
 #include <stdio.h>
 
-long long dp[10001];
+int dp[100001];
 
 int main()
 {
 	FILE *fi = fopen("stamps.in", "r");
 	FILE *fo = fopen("stamps.out", "w");
-	int N, i, j, V, o[25];
-	fscanf(fi, "%d %d", &V, &N);
-	for(i = 0; i < V; ++i)
-		fscanf(fi, "%d", &o[i]);
-	dp[0] = 1;	
-	for(i = 0; i < V; ++i)
-		for(j = o[i]; j <= N; ++j)
-			dp[j] += dp[j-o[i]];
-	fprintf(fo, "%lld\n", dp[N]);
+	int N, K, stamp[50], i, j, m;
+	fscanf(fi, "%d %d", &K, &N);
+	for(i = 0; i < N; ++i)
+		fscanf(fi, "%d", &stamp[i]);
+	m = 0;
+	for(i = 1; i < 100000; ++i)
+		dp[i] = 500;
+	for(;;) {
+		++m;
+		for(i = 0; i < N; ++i)
+			for(j = stamp[i]; j <= m; ++j)
+				if (dp[j] > dp[j-stamp[i]] + 1)
+					dp[j] = dp[j-stamp[i]] + 1;
+		if (dp[m] > K)
+			break;
+	}
+	fprintf(fo, "%d\n", m-1);
 	return 0;	
 }
